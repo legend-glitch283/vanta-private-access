@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Connexion — Match</title>
+<title>Connexion — Mingle</title>
 
 <style>
 * {
@@ -18,14 +18,14 @@ body {
     overflow: hidden;
 }
 
+/* =========================
+   SITE NORMAL
+========================= */
+
 #site {
     min-height: 100vh;
     transition: opacity 1s ease, filter 1s ease;
 }
-
-/* =========================
-   FAUX SITE DE RENCONTRE
-========================= */
 
 header {
     height: 64px;
@@ -121,7 +121,7 @@ input:focus {
 }
 
 /* =========================
-   REVELATION
+   ÉCRAN DE SIMULATION
 ========================= */
 
 #reveal {
@@ -266,10 +266,129 @@ input:focus {
     50% { opacity: .25; }
     100% { opacity: 1; }
 }
+
+/* =========================
+   FAUSSE NOTIFICATION
+========================= */
+
+#antivirusNotification {
+    position: fixed;
+    right: 22px;
+    bottom: 22px;
+    width: 330px;
+    background: #ffffff;
+    color: #202124;
+    border-radius: 8px;
+    box-shadow: 0 10px 35px rgba(0,0,0,.30);
+    border: 1px solid #d9dde1;
+    padding: 16px;
+    display: none;
+    z-index: 500;
+    animation: notificationIn .35s ease;
+}
+
+.antivirusHeader {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.antivirusIcon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: #e8f0e8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.antivirusText {
+    font-size: 12px;
+    line-height: 1.5;
+    color: #5f666e;
+}
+
+.antivirusProgress {
+    height: 3px;
+    background: #e5e8eb;
+    margin-top: 12px;
+    overflow: hidden;
+}
+
+.antivirusProgressBar {
+    width: 0%;
+    height: 100%;
+    background: #4c8c62;
+    transition: width 4s linear;
+}
+
+@keyframes notificationIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 600px) {
+    header {
+        padding: 0 20px;
+    }
+
+    .card {
+        width: 90%;
+        padding: 28px 23px;
+    }
+
+    #antivirusNotification {
+        right: 12px;
+        bottom: 12px;
+        width: calc(100% - 24px);
+    }
+}
 </style>
 </head>
 
 <body>
+
+<!-- =========================
+     FAUSSE NOTIFICATION
+========================= -->
+
+<div id="antivirusNotification">
+
+    <div class="antivirusHeader">
+
+        <div class="antivirusIcon">
+            🛡️
+        </div>
+
+        Sécurité Windows
+
+    </div>
+
+    <div class="antivirusText" id="antivirusText">
+        Activité potentiellement dangereuse détectée.
+        Analyse de la session en cours...
+    </div>
+
+    <div class="antivirusProgress">
+        <div
+            class="antivirusProgressBar"
+            id="antivirusProgressBar">
+        </div>
+    </div>
+
+</div>
+
 
 <!-- =========================
      SITE NORMAL
@@ -297,6 +416,7 @@ input:focus {
 
         <div class="field">
             <label for="email">Adresse e-mail</label>
+
             <input
                 id="email"
                 type="email"
@@ -307,7 +427,9 @@ input:focus {
         </div>
 
         <div class="field">
+
             <label for="password">Mot de passe</label>
+
             <input
                 id="password"
                 type="password"
@@ -315,6 +437,7 @@ input:focus {
                 autocomplete="off"
                 required
             >
+
         </div>
 
         <button class="login" type="submit">
@@ -343,7 +466,9 @@ input:focus {
     <div id="sequence">
 
         <div class="status">
-            <strong id="statusTitle">Vérification de la session</strong>
+            <strong id="statusTitle">
+                Vérification de la session
+            </strong>
         </div>
 
         <div class="message" id="message">
@@ -351,29 +476,40 @@ input:focus {
         </div>
 
         <div class="progress">
-            <div class="progress-bar" id="progressBar"></div>
+            <div
+                class="progress-bar"
+                id="progressBar">
+            </div>
         </div>
 
         <div class="data-list" id="dataList">
 
             <div>
                 Identifiant :
-                <span id="fakeEmail">analyse...</span>
+                <span id="fakeEmail">
+                    analyse...
+                </span>
             </div>
 
             <div>
                 Mot de passe :
-                <span class="fake-password">••••••••••••</span>
+                <span class="fake-password">
+                    ••••••••••••
+                </span>
             </div>
 
             <div>
                 Session :
-                <span>analyse en cours</span>
+                <span>
+                    analyse en cours
+                </span>
             </div>
 
             <div>
                 Statut :
-                <span id="dataStatus">vérification</span>
+                <span id="dataStatus">
+                    vérification
+                </span>
             </div>
 
         </div>
@@ -381,9 +517,7 @@ input:focus {
     </div>
 
 
-    <!-- =========================
-         REVELATION FINALE
-    ========================= -->
+    <!-- RÉVÉLATION FINALE -->
 
     <div id="final">
 
@@ -404,7 +538,9 @@ input:focus {
 
         <div class="final-box">
 
-            <strong>Aucune donnée n'a été collectée.</strong>
+            <strong>
+                Aucune donnée n'a été collectée.
+            </strong>
 
             <br><br>
 
@@ -430,32 +566,53 @@ input:focus {
 
 /*
 ====================================================
-IMPORTANT
+SIMULATION UNIQUEMENT
 
-Ce formulaire ne transmet aucune donnée.
-Les valeurs saisies sont uniquement utilisées
-localement pour la simulation visuelle.
-
+Le formulaire ne transmet aucune donnée.
 Aucun identifiant ou mot de passe n'est stocké.
+La notification est entièrement visuelle.
 ====================================================
 */
 
-const form = document.getElementById("loginForm");
-const site = document.getElementById("site");
+const form =
+    document.getElementById("loginForm");
 
-const reveal = document.getElementById("reveal");
-const message = document.getElementById("message");
-const progressBar = document.getElementById("progressBar");
+const site =
+    document.getElementById("site");
 
-const dataList = document.getElementById("dataList");
-const fakeEmail = document.getElementById("fakeEmail");
-const dataStatus = document.getElementById("dataStatus");
+const reveal =
+    document.getElementById("reveal");
 
-const sequence = document.getElementById("sequence");
-const final = document.getElementById("final");
+const message =
+    document.getElementById("message");
+
+const progressBar =
+    document.getElementById("progressBar");
+
+const dataList =
+    document.getElementById("dataList");
+
+const dataStatus =
+    document.getElementById("dataStatus");
+
+const sequence =
+    document.getElementById("sequence");
+
+const final =
+    document.getElementById("final");
+
+const antivirusNotification =
+    document.getElementById("antivirusNotification");
+
+const antivirusText =
+    document.getElementById("antivirusText");
+
+const antivirusProgressBar =
+    document.getElementById("antivirusProgressBar");
 
 
-// Le formulaire ne part jamais vers Internet
+// Empêche toute véritable soumission du formulaire
+
 form.addEventListener("submit", function(event) {
 
     event.preventDefault();
@@ -463,7 +620,10 @@ form.addEventListener("submit", function(event) {
 });
 
 
-// Après 7 secondes, début de la simulation
+// =========================
+// DÉBUT DE LA SIMULATION
+// =========================
+
 setTimeout(() => {
 
     site.style.opacity = "0.35";
@@ -474,11 +634,8 @@ setTimeout(() => {
         site.style.display = "none";
         reveal.style.display = "flex";
 
-        /*
-        --------------------------------------------
-        PHASE 1
-        --------------------------------------------
-        */
+
+        // 1 — Vérification
 
         setTimeout(() => {
 
@@ -490,27 +647,21 @@ setTimeout(() => {
         }, 500);
 
 
-        /*
-        --------------------------------------------
-        PHASE 2
-        --------------------------------------------
-        */
+        // 2 — Activité inhabituelle
 
         setTimeout(() => {
 
             message.innerHTML =
-                '<span class="warning">Activité inhabituelle détectée.</span>';
+                '<span class="warning">' +
+                'Activité inhabituelle détectée.' +
+                '</span>';
 
             progressBar.style.width = "36%";
 
         }, 2500);
 
 
-        /*
-        --------------------------------------------
-        PHASE 3
-        --------------------------------------------
-        */
+        // 3 — Analyse
 
         setTimeout(() => {
 
@@ -521,24 +672,34 @@ setTimeout(() => {
 
             dataList.style.display = "block";
 
-            // On ne récupère PAS réellement l'adresse.
-            // On affiche seulement un texte générique.
-
-            fakeEmail.textContent = "identifiant détecté";
-
         }, 4800);
 
 
-        /*
-        --------------------------------------------
-        PHASE 4
-        --------------------------------------------
-        */
+        // 4 — Notification antivirus
+
+        setTimeout(() => {
+
+            antivirusNotification.style.display =
+                "block";
+
+            setTimeout(() => {
+
+                antivirusProgressBar.style.width =
+                    "100%";
+
+            }, 100);
+
+        }, 7000);
+
+
+        // 5 — Informations détectées
 
         setTimeout(() => {
 
             message.innerHTML =
-                '<span class="warning">Informations de connexion détectées.</span>';
+                '<span class="warning">' +
+                'Informations de connexion détectées.' +
+                '</span>';
 
             dataStatus.textContent =
                 "analyse des données";
@@ -550,74 +711,96 @@ setTimeout(() => {
         }, 7600);
 
 
-        /*
-        --------------------------------------------
-        PHASE 5
-        --------------------------------------------
-        */
+        // 6 — Notification change
+
+        setTimeout(() => {
+
+            antivirusText.textContent =
+                "Tentative de sécurisation de votre session...";
+
+        }, 10500);
+
+
+        // 7 — Transmission simulée
 
         setTimeout(() => {
 
             message.innerHTML =
-                '<span class="warning">Transmission de la session...</span>';
+                '<span class="warning">' +
+                'Transmission de la session...' +
+                '</span>';
 
             dataStatus.textContent =
                 "traitement";
 
             progressBar.style.width = "81%";
 
-        }, 10400);
+        }, 10800);
 
 
-        /*
-        --------------------------------------------
-        PHASE 6
-        --------------------------------------------
-        */
+        // 8 — Notification inquiétante
+
+        setTimeout(() => {
+
+            antivirusText.innerHTML =
+                "<strong>Action impossible.</strong><br>" +
+                "La session semble compromise.";
+
+        }, 14000);
+
+
+        // 9 — Session compromise
 
         setTimeout(() => {
 
             message.innerHTML =
-                '<span class="warning">Votre session semble compromise.</span>';
+                '<span class="warning">' +
+                'Votre session semble compromise.' +
+                '</span>';
 
             dataStatus.textContent =
-                "alerte";
+                "ALERTE";
 
             progressBar.style.width = "91%";
 
             sequence.classList.add("flash");
 
-        }, 13200);
+        }, 14200);
 
 
-        /*
-        --------------------------------------------
-        PHASE 7
-        --------------------------------------------
-        */
+        // 10 — Sécurisation
 
         setTimeout(() => {
 
             message.innerHTML =
-                '<span class="warning">Sécurisation de la session...</span>';
+                '<span class="warning">' +
+                'Sécurisation de la session...' +
+                '</span>';
 
             progressBar.style.width = "100%";
 
-        }, 15800);
+        }, 17000);
 
 
-        /*
-        --------------------------------------------
-        RÉVÉLATION
-        --------------------------------------------
-        */
+        // 11 — Notification disparaît
+
+        setTimeout(() => {
+
+            antivirusNotification.style.display =
+                "none";
+
+        }, 19000);
+
+
+        // 12 — RÉVÉLATION
 
         setTimeout(() => {
 
             sequence.style.display = "none";
+
             final.style.display = "block";
 
-        }, 19500);
+        }, 20500);
 
     }, 1000);
 
