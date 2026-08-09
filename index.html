@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portail sécurisé</title>
+<title>Connexion — Match</title>
 
 <style>
 * {
@@ -13,50 +13,43 @@
 body {
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
-    background: #f4f5f7;
-    color: #202124;
-    min-height: 100vh;
+    background: #f7f4f6;
+    color: #242124;
     overflow: hidden;
 }
 
-/* =========================
-   PAGE NORMALE
-========================= */
-
-#normalPage {
+#site {
     min-height: 100vh;
-    transition: opacity .4s ease, filter .4s ease;
+    transition: opacity 1s ease, filter 1s ease;
 }
+
+/* =========================
+   FAUX SITE DE RENCONTRE
+========================= */
 
 header {
     height: 64px;
     background: white;
-    border-bottom: 1px solid #dddfe3;
+    border-bottom: 1px solid #e5e1e4;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     padding: 0 42px;
 }
 
 .logo {
-    display: flex;
-    align-items: center;
-    gap: 11px;
-    font-weight: 600;
+    font-size: 21px;
+    font-weight: 700;
+    color: #d94b73;
 }
 
-.logoBox {
-    width: 30px;
-    height: 30px;
-    border-radius: 7px;
-    background: #263442;
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.header-link {
+    color: #777;
+    font-size: 13px;
 }
 
 main {
-    min-height: calc(100vh - 122px);
+    min-height: calc(100vh - 64px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -65,33 +58,25 @@ main {
 .card {
     width: 420px;
     background: white;
-    border: 1px solid #dedfe2;
-    border-radius: 10px;
+    border-radius: 12px;
     padding: 38px;
-    box-shadow: 0 10px 35px rgba(0,0,0,.06);
+    box-shadow: 0 12px 40px rgba(0,0,0,.08);
 }
 
-.lock {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: #eef1f4;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 22px;
-}
-
-h1 {
+.card h1 {
     margin: 0 0 9px;
     font-size: 25px;
 }
 
 .subtitle {
-    margin: 0 0 28px;
-    color: #6c737c;
+    color: #777;
     font-size: 14px;
     line-height: 1.5;
+    margin-bottom: 27px;
+}
+
+.field {
+    margin-bottom: 19px;
 }
 
 label {
@@ -101,40 +86,37 @@ label {
     margin-bottom: 8px;
 }
 
-.field {
-    margin-bottom: 20px;
-}
-
 input {
     width: 100%;
-    height: 45px;
-    border: 1px solid #ccd1d7;
-    border-radius: 6px;
+    height: 46px;
+    border: 1px solid #d5d1d4;
+    border-radius: 7px;
     padding: 0 13px;
     font-size: 14px;
     outline: none;
 }
 
 input:focus {
-    border-color: #52677d;
-    box-shadow: 0 0 0 3px rgba(82,103,125,.1);
+    border-color: #d94b73;
+    box-shadow: 0 0 0 3px rgba(217,75,115,.10);
 }
 
 .login {
     width: 100%;
-    height: 45px;
-    border: 0;
-    border-radius: 6px;
-    background: #263442;
+    height: 46px;
+    border: none;
+    border-radius: 7px;
+    background: #d94b73;
     color: white;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
 }
 
-.small {
-    margin-top: 20px;
+.bottom {
     text-align: center;
-    color: #858b92;
+    margin-top: 20px;
+    color: #999;
     font-size: 11px;
 }
 
@@ -143,121 +125,146 @@ input:focus {
 ========================= */
 
 #reveal {
+    display: none;
     position: fixed;
     inset: 0;
-    background: #050607;
+    background: #090a0c;
     color: white;
-    display: none;
+    z-index: 100;
     align-items: center;
     justify-content: center;
     text-align: center;
-    z-index: 100;
 }
 
-.revealContent {
-    width: min(700px, 90%);
+#sequence {
+    width: min(650px, 90%);
 }
 
-.warning {
-    font-size: 12px;
-    letter-spacing: 5px;
-    color: #ff4d4d;
-    font-weight: bold;
-    margin-bottom: 25px;
-    opacity: 0;
+.status {
+    color: #aeb3ba;
+    font-size: 13px;
+    margin-bottom: 22px;
 }
 
-.revealTitle {
-    font-size: clamp(38px, 7vw, 76px);
-    font-weight: 800;
-    letter-spacing: -3px;
-    margin: 0;
-    opacity: 0;
-}
-
-.revealText {
-    margin-top: 25px;
-    color: #b8bcc2;
-    font-size: 16px;
-    line-height: 1.7;
-    opacity: 0;
+.status strong {
+    color: #fff;
 }
 
 .progress {
     width: 100%;
-    height: 2px;
-    background: #202326;
-    margin-top: 35px;
+    height: 3px;
+    background: #25282d;
+    margin: 25px 0;
     overflow: hidden;
-    opacity: 0;
 }
 
-.progressBar {
+.progress-bar {
     width: 0%;
     height: 100%;
-    background: #ff4545;
+    background: #d94b73;
+    transition: width .8s ease;
 }
 
-.final {
+.message {
+    min-height: 60px;
+    font-size: 19px;
+    line-height: 1.5;
+}
+
+.warning {
+    color: #ff5c5c;
+    font-weight: 700;
+}
+
+.data-list {
     display: none;
+    margin: 25px auto;
+    max-width: 460px;
+    text-align: left;
+    background: #101216;
+    border: 1px solid #282c32;
+    border-radius: 7px;
+    padding: 18px 20px;
+    font-family: monospace;
+    font-size: 12px;
+    line-height: 2;
 }
 
-.final h2 {
-    font-size: 40px;
-    margin-bottom: 15px;
+.data-list div {
+    color: #aeb3ba;
 }
 
-.final p {
-    color: #b8bcc2;
+.data-list span {
+    color: #e8ebef;
+}
+
+.fake-password {
+    letter-spacing: 3px;
+}
+
+#final {
+    display: none;
+    width: min(700px, 90%);
+    animation: appear .8s ease;
+}
+
+.final-label {
+    color: #d94b73;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    margin-bottom: 22px;
+}
+
+#final h1 {
+    font-size: clamp(38px, 7vw, 70px);
+    line-height: 1.05;
+    margin: 0 0 22px;
+    letter-spacing: -2px;
+}
+
+#final p {
+    color: #b9bec5;
+    line-height: 1.7;
+    font-size: 15px;
+}
+
+.final-box {
+    margin: 28px auto 0;
+    max-width: 520px;
+    padding: 20px;
+    background: #111317;
+    border: 1px solid #292d33;
+    border-radius: 8px;
+    color: #c7cbd0;
+    font-size: 13px;
     line-height: 1.7;
 }
 
-.points {
-    margin: 28px auto 0;
-    max-width: 500px;
-    text-align: left;
-    background: #0d0f11;
-    border: 1px solid #22262b;
-    padding: 20px;
-    border-radius: 7px;
-    color: #c9cdd1;
-    font-size: 13px;
-    line-height: 1.8;
-}
-
-.points strong {
+.final-box strong {
     color: white;
-}
-
-/* =========================
-   GLITCH
-========================= */
-
-.glitch {
-    animation: glitch .18s linear infinite;
-}
-
-@keyframes glitch {
-    0% { transform: translate(0); }
-    25% { transform: translate(2px,-1px); }
-    50% { transform: translate(-2px,1px); }
-    75% { transform: translate(1px,1px); }
-    100% { transform: translate(0); }
-}
-
-.show {
-    animation: appear .7s ease forwards;
 }
 
 @keyframes appear {
     from {
         opacity: 0;
-        transform: translateY(8px);
+        transform: translateY(15px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+.flash {
+    animation: flash .25s;
+}
+
+@keyframes flash {
+    0% { opacity: 1; }
+    50% { opacity: .25; }
+    100% { opacity: 1; }
 }
 </style>
 </head>
@@ -265,46 +272,44 @@ input:focus {
 <body>
 
 <!-- =========================
-     PAGE NORMALE
+     SITE NORMAL
 ========================= -->
 
-<div id="normalPage">
+<div id="site">
 
 <header>
-    <div class="logo">
-        <div class="logoBox">S</div>
-        Secure Portal
-    </div>
+    <div class="logo">mingle</div>
+    <div class="header-link">Déjà membre ? Connexion</div>
 </header>
 
 <main>
 
 <div class="card">
 
-    <div class="lock">🔒</div>
-
-    <h1>Connexion sécurisée</h1>
+    <h1>Bienvenue</h1>
 
     <p class="subtitle">
-        Connectez-vous à votre espace pour accéder
-        aux services disponibles.
+        Connectez-vous pour retrouver vos conversations
+        et découvrir les nouveaux profils.
     </p>
 
-    <form id="demoForm">
+    <form id="loginForm">
 
         <div class="field">
-            <label>Adresse e-mail</label>
+            <label for="email">Adresse e-mail</label>
             <input
+                id="email"
                 type="email"
-                placeholder="nom@entreprise.fr"
+                placeholder="votre@email.fr"
                 autocomplete="off"
                 required
             >
         </div>
 
         <div class="field">
-            <label>Mot de passe</label>
+            <label for="password">Mot de passe</label>
             <input
+                id="password"
                 type="password"
                 placeholder="Votre mot de passe"
                 autocomplete="off"
@@ -312,14 +317,14 @@ input:focus {
             >
         </div>
 
-        <button class="login">
+        <button class="login" type="submit">
             Se connecter
         </button>
 
     </form>
 
-    <div class="small">
-        Connexion protégée · Accès réservé
+    <div class="bottom">
+        Vos informations sont protégées.
     </div>
 
 </div>
@@ -330,61 +335,93 @@ input:focus {
 
 
 <!-- =========================
-     REVELATION
+     SIMULATION
 ========================= -->
 
 <div id="reveal">
 
-<div class="revealContent">
+    <div id="sequence">
 
-    <div class="warning" id="warning">
-        ALERTE DE SÉCURITÉ
-    </div>
-
-    <h1 class="revealTitle" id="revealTitle">
-        CE N'ÉTAIT PAS<br>CE QUE VOUS PENSIEZ.
-    </h1>
-
-    <p class="revealText" id="revealText">
-        La page que vous venez de consulter était une simulation
-        conçue pour reproduire une tentative d'hameçonnage.
-    </p>
-
-    <div class="progress" id="progress">
-        <div class="progressBar" id="progressBar"></div>
-    </div>
-
-
-    <div class="final" id="final">
-
-        <div class="warning show">
-            SIMULATION TERMINÉE
+        <div class="status">
+            <strong id="statusTitle">Vérification de la session</strong>
         </div>
 
-        <h2>Vous avez été piégé.</h2>
+        <div class="message" id="message">
+            Vérification de votre connexion...
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="data-list" id="dataList">
+
+            <div>
+                Identifiant :
+                <span id="fakeEmail">analyse...</span>
+            </div>
+
+            <div>
+                Mot de passe :
+                <span class="fake-password">••••••••••••</span>
+            </div>
+
+            <div>
+                Session :
+                <span>analyse en cours</span>
+            </div>
+
+            <div>
+                Statut :
+                <span id="dataStatus">vérification</span>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         REVELATION FINALE
+    ========================= -->
+
+    <div id="final">
+
+        <div class="final-label">
+            EXERCICE DE SENSIBILISATION
+        </div>
+
+        <h1>
+            Vous venez de tomber<br>
+            dans une simulation.
+        </h1>
 
         <p>
-            Cette page faisait partie d'un exercice interne
-            de sensibilisation à la cybersécurité.
-            <br><br>
-            <strong>Aucune information saisie n'a été envoyée
-            ou enregistrée.</strong>
+            Pendant quelques secondes, cette page vous a laissé
+            croire que vos informations étaient en train d'être
+            récupérées.
         </p>
 
-        <div class="points">
+        <div class="final-box">
 
-            <strong>Ce qu'il fallait remarquer :</strong><br><br>
+            <strong>Aucune donnée n'a été collectée.</strong>
 
-            • Vérifier l'adresse exacte du site avant de se connecter.<br>
-            • Se méfier d'une demande inattendue d'identifiants.<br>
-            • Ne jamais communiquer son mot de passe à une page douteuse.<br>
-            • En cas de doute, passer par le site officiel ou contacter le service informatique.
+            <br><br>
+
+            Le formulaire était entièrement local :
+            rien n'a été envoyé à un serveur et aucun mot de passe
+            n'a été enregistré.
+
+            <br><br>
+
+            <strong>
+                Vérifiez toujours l'adresse d'un site avant
+                de saisir des informations sensibles.
+            </strong>
 
         </div>
 
     </div>
-
-</div>
 
 </div>
 
@@ -392,89 +429,197 @@ input:focus {
 <script>
 
 /*
-    IMPORTANT :
-    aucune donnée du formulaire n'est envoyée,
-    stockée ou enregistrée.
+====================================================
+IMPORTANT
+
+Ce formulaire ne transmet aucune donnée.
+Les valeurs saisies sont uniquement utilisées
+localement pour la simulation visuelle.
+
+Aucun identifiant ou mot de passe n'est stocké.
+====================================================
 */
 
+const form = document.getElementById("loginForm");
+const site = document.getElementById("site");
+
 const reveal = document.getElementById("reveal");
-const normalPage = document.getElementById("normalPage");
-
-const warning = document.getElementById("warning");
-const title = document.getElementById("revealTitle");
-const text = document.getElementById("revealText");
-
-const progress = document.getElementById("progress");
+const message = document.getElementById("message");
 const progressBar = document.getElementById("progressBar");
 
+const dataList = document.getElementById("dataList");
+const fakeEmail = document.getElementById("fakeEmail");
+const dataStatus = document.getElementById("dataStatus");
+
+const sequence = document.getElementById("sequence");
 const final = document.getElementById("final");
 
 
-// Empêche toute véritable soumission
-document.getElementById("demoForm").addEventListener("submit", function(e) {
-    e.preventDefault();
+// Le formulaire ne part jamais vers Internet
+form.addEventListener("submit", function(event) {
+
+    event.preventDefault();
+
 });
 
 
-// Révélation automatique après 7 secondes
+// Après 7 secondes, début de la simulation
 setTimeout(() => {
 
-    normalPage.style.filter = "brightness(.2)";
-    normalPage.style.opacity = "0";
+    site.style.opacity = "0.35";
+    site.style.filter = "blur(1px)";
 
     setTimeout(() => {
 
-        normalPage.style.display = "none";
+        site.style.display = "none";
         reveal.style.display = "flex";
 
-        // Première alerte
-        setTimeout(() => {
-            warning.classList.add("show");
-        }, 250);
+        /*
+        --------------------------------------------
+        PHASE 1
+        --------------------------------------------
+        */
 
-        // Gros message
-        setTimeout(() => {
-            title.classList.add("show", "glitch");
-        }, 900);
-
-        // Explication
-        setTimeout(() => {
-            text.classList.add("show");
-        }, 1800);
-
-        // Barre de progression
         setTimeout(() => {
 
-            progress.style.opacity = "1";
+            message.textContent =
+                "Vérification de votre session...";
 
-            let width = 0;
+            progressBar.style.width = "18%";
 
-            const interval = setInterval(() => {
+        }, 500);
 
-                width += 2;
-                progressBar.style.width = width + "%";
 
-                if (width >= 100) {
+        /*
+        --------------------------------------------
+        PHASE 2
+        --------------------------------------------
+        */
 
-                    clearInterval(interval);
+        setTimeout(() => {
 
-                    setTimeout(() => {
+            message.innerHTML =
+                '<span class="warning">Activité inhabituelle détectée.</span>';
 
-                        warning.style.display = "none";
-                        title.style.display = "none";
-                        text.style.display = "none";
-                        progress.style.display = "none";
-
-                        final.style.display = "block";
-
-                    }, 500);
-                }
-
-            }, 20);
+            progressBar.style.width = "36%";
 
         }, 2500);
 
-    }, 500);
+
+        /*
+        --------------------------------------------
+        PHASE 3
+        --------------------------------------------
+        */
+
+        setTimeout(() => {
+
+            message.textContent =
+                "Analyse des informations de session...";
+
+            progressBar.style.width = "54%";
+
+            dataList.style.display = "block";
+
+            // On ne récupère PAS réellement l'adresse.
+            // On affiche seulement un texte générique.
+
+            fakeEmail.textContent = "identifiant détecté";
+
+        }, 4800);
+
+
+        /*
+        --------------------------------------------
+        PHASE 4
+        --------------------------------------------
+        */
+
+        setTimeout(() => {
+
+            message.innerHTML =
+                '<span class="warning">Informations de connexion détectées.</span>';
+
+            dataStatus.textContent =
+                "analyse des données";
+
+            progressBar.style.width = "69%";
+
+            sequence.classList.add("flash");
+
+        }, 7600);
+
+
+        /*
+        --------------------------------------------
+        PHASE 5
+        --------------------------------------------
+        */
+
+        setTimeout(() => {
+
+            message.innerHTML =
+                '<span class="warning">Transmission de la session...</span>';
+
+            dataStatus.textContent =
+                "traitement";
+
+            progressBar.style.width = "81%";
+
+        }, 10400);
+
+
+        /*
+        --------------------------------------------
+        PHASE 6
+        --------------------------------------------
+        */
+
+        setTimeout(() => {
+
+            message.innerHTML =
+                '<span class="warning">Votre session semble compromise.</span>';
+
+            dataStatus.textContent =
+                "alerte";
+
+            progressBar.style.width = "91%";
+
+            sequence.classList.add("flash");
+
+        }, 13200);
+
+
+        /*
+        --------------------------------------------
+        PHASE 7
+        --------------------------------------------
+        */
+
+        setTimeout(() => {
+
+            message.innerHTML =
+                '<span class="warning">Sécurisation de la session...</span>';
+
+            progressBar.style.width = "100%";
+
+        }, 15800);
+
+
+        /*
+        --------------------------------------------
+        RÉVÉLATION
+        --------------------------------------------
+        */
+
+        setTimeout(() => {
+
+            sequence.style.display = "none";
+            final.style.display = "block";
+
+        }, 19500);
+
+    }, 1000);
 
 }, 7000);
 
