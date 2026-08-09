@@ -1,180 +1,424 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VANTA // PRIVATE ACCESS</title>
-<style>
-  * { box-sizing: border-box; }
-  html, body { margin:0; width:100%; height:100%; background:#050505; color:#e8e8e8; font-family:Consolas, "Courier New", monospace; }
-  body { overflow:hidden; }
-  .screen { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; padding:24px; }
-  #terminalScreen { background:radial-gradient(circle at center, #101010 0, #050505 55%, #000 100%); }
-  .terminal {
-    width:min(1050px, 96vw); height:min(680px, 88vh);
-    border:1px solid #263026; background:#020302;
-    box-shadow:0 0 35px rgba(0,255,80,.08), inset 0 0 30px rgba(0,255,80,.025);
-    overflow:hidden; position:relative;
-  }
-  .bar { height:36px; display:flex; align-items:center; gap:7px; padding:0 12px; background:#111; border-bottom:1px solid #222; }
-  .dot { width:11px; height:11px; border-radius:50%; background:#444; }
-  .dot.r{background:#ff5f57}.dot.y{background:#febc2e}.dot.g{background:#28c840}
-  .title { margin-left:8px; color:#777; font:12px Arial,sans-serif; }
-  #output { height:calc(100% - 36px); padding:22px; overflow:hidden; color:#9cff9c; font-size:14px; line-height:1.55; white-space:pre-wrap; }
-  .cursor { display:inline-block; width:8px; height:16px; background:#9cff9c; vertical-align:-3px; animation:blink .8s infinite; }
-  @keyframes blink { 50% {opacity:0} }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  #panicScreen { display:none; background:#120000; text-align:center; animation:flash .25s infinite alternate; }
-  @keyframes flash { from{background:#120000} to{background:#250000} }
-  .panicBox { width:min(850px,94vw); }
-  .warning { color:#ff3030; font-size:clamp(30px,6vw,72px); font-weight:900; letter-spacing:2px; text-shadow:0 0 20px #f00; }
-  .sub { color:#ff9b9b; font-size:clamp(15px,2vw,22px); margin-top:20px; }
-  .progress { margin:35px auto 0; height:18px; max-width:700px; border:1px solid #f33; padding:2px; }
-  .progress i { display:block; width:100%; height:100%; background:#f22; animation:danger 2.5s linear; transform-origin:left; }
-  @keyframes danger { from{transform:scaleX(0)} to{transform:scaleX(1)} }
+    <title>Portail sécurisé — Accès</title>
 
-  #reveal { display:none; background:linear-gradient(135deg,#07140b,#030603); overflow:auto; }
-  .card { width:min(850px,94vw); padding:42px; border:1px solid #2b8; background:rgba(3,15,8,.9); box-shadow:0 0 40px rgba(0,255,120,.08); }
-  .badge { display:inline-block; padding:7px 12px; border:1px solid #35d67b; color:#52f18d; font-size:12px; letter-spacing:2px; }
-  h1 { color:#62ff9b; font-family:Arial,sans-serif; font-size:clamp(34px,6vw,62px); margin:18px 0 8px; }
-  h2 { color:#fff; font-family:Arial,sans-serif; }
-  p, li { font-family:Arial,sans-serif; color:#c8d8ce; line-height:1.6; }
-  ul { padding-left:22px; }
-  .good { margin-top:28px; padding:16px; border-left:4px solid #4dff8b; background:#0b2113; color:#d9ffe6; font-family:Arial,sans-serif; }
-  button { margin-top:24px; padding:12px 18px; background:#102c1a; border:1px solid #45ef89; color:#aaffc7; cursor:pointer; font-weight:bold; }
-  button:hover { background:#174b2a; }
-  .small { opacity:.6; font-size:12px; margin-top:18px; }
-</style>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f6f8;
+            color: #202124;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            height: 64px;
+            background: #ffffff;
+            border-bottom: 1px solid #e2e5e8;
+            display: flex;
+            align-items: center;
+            padding: 0 42px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            font-weight: 600;
+            font-size: 17px;
+            color: #202124;
+        }
+
+        .brand-icon {
+            width: 29px;
+            height: 29px;
+            border-radius: 7px;
+            background: #1f2937;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 45px 20px;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 430px;
+            background: #ffffff;
+            border: 1px solid #e0e3e7;
+            border-radius: 10px;
+            padding: 38px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+        }
+
+        .security-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #eef2f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 22px;
+            font-size: 18px;
+        }
+
+        h1 {
+            font-size: 25px;
+            font-weight: 600;
+            margin-bottom: 9px;
+            color: #17191c;
+        }
+
+        .subtitle {
+            color: #69727d;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 28px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #30343a;
+        }
+
+        .field {
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            height: 45px;
+            border: 1px solid #cfd5dc;
+            border-radius: 6px;
+            padding: 0 13px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color .15s, box-shadow .15s;
+        }
+
+        input:focus {
+            border-color: #52677d;
+            box-shadow: 0 0 0 3px rgba(82, 103, 125, .12);
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .password-wrapper input {
+            padding-right: 45px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 0;
+            background: transparent;
+            color: #69727d;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 23px;
+            font-size: 13px;
+        }
+
+        .remember {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            color: #5e6670;
+        }
+
+        .remember input {
+            width: 15px;
+            height: 15px;
+        }
+
+        .help {
+            color: #40576d;
+            text-decoration: none;
+        }
+
+        .help:hover {
+            text-decoration: underline;
+        }
+
+        button.login {
+            width: 100%;
+            height: 45px;
+            border: none;
+            border-radius: 6px;
+            background: #263442;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background .15s, transform .1s;
+        }
+
+        button.login:hover {
+            background: #1d2935;
+        }
+
+        button.login:active {
+            transform: scale(.99);
+        }
+
+        .notice {
+            margin-top: 23px;
+            padding-top: 20px;
+            border-top: 1px solid #edf0f2;
+            font-size: 11px;
+            line-height: 1.6;
+            color: #7a828b;
+            text-align: center;
+        }
+
+        footer {
+            height: 58px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #858d96;
+            font-size: 11px;
+        }
+
+        .simulation {
+            display: none;
+            text-align: center;
+        }
+
+        .simulation-icon {
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            background: #eaf5ee;
+            color: #26734d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 22px;
+            font-size: 25px;
+        }
+
+        .simulation h2 {
+            font-size: 23px;
+            margin-bottom: 12px;
+        }
+
+        .simulation p {
+            color: #626b75;
+            font-size: 14px;
+            line-height: 1.65;
+            margin-bottom: 22px;
+        }
+
+        .details {
+            background: #f5f7f9;
+            border: 1px solid #e1e5e9;
+            border-radius: 7px;
+            padding: 15px;
+            text-align: left;
+            font-size: 12px;
+            color: #5d6670;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 0 20px;
+            }
+
+            .login-card {
+                padding: 28px 23px;
+                border-radius: 8px;
+            }
+        }
+    </style>
 </head>
+
 <body>
 
-<section id="terminalScreen" class="screen">
-  <div class="terminal">
-    <div class="bar">
-      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
-      <span class="title">VANTA // PRIVATE ACCESS</span>
+<header>
+    <div class="brand">
+        <div class="brand-icon">S</div>
+        Secure Portal
     </div>
-    <div id="output"></div>
-  </div>
-</section>
+</header>
 
-<section id="panicScreen" class="screen">
-  <div class="panicBox">
-    <div class="warning">⚠ ACCESS BREACH</div>
-    <div class="sub">VANTA SECURITY PROTOCOL — CRITICAL ALERT</div>
-    <div class="sub" id="panicText">Finalizing security check...</div>
-    <div class="progress"><i></i></div>
-  </div>
-</section>
+<main>
 
-<section id="reveal" class="screen">
-  <div class="card">
-    <span class="badge">SIMULATION TERMINÉE</span>
-    <h1>😅 Tu n'as pas été hacké.</h1>
-    <p>
-      Tout ce qui vient de s'afficher était une <strong>fausse simulation</strong>.
-      Cette page ne récupère aucun mot de passe, fichier, adresse IP ou donnée personnelle.
-    </p>
-    <div class="good">
-      <strong>Pourquoi cette simulation ?</strong><br>
-      Pour montrer à quel point une interface peut donner l'impression qu'un ordinateur
-      est compromis alors qu'il ne se passe absolument rien.
-    </div>
-    <h2>Pour éviter les vraies attaques :</h2>
-    <ul>
-      <li>N'entre jamais ton mot de passe sur un lien douteux.</li>
-      <li>Active la double authentification (2FA) quand c'est possible.</li>
-      <li>Vérifie l'adresse du site avant de te connecter.</li>
-      <li>Évite les fichiers et programmes provenant de sources inconnues.</li>
-      <li>Garde ton navigateur, Windows et ton antivirus à jour.</li>
-    </ul>
-    <button onclick="location.reload()">Rejouer la simulation</button>
-    <div class="small">Fictional security demonstration — no data is collected.</div>
-  </div>
-</section>
+    <section class="login-card" id="loginCard">
+
+        <div id="loginInterface">
+
+            <div class="security-icon">🔒</div>
+
+            <h1>Connexion sécurisée</h1>
+
+            <p class="subtitle">
+                Connectez-vous à votre espace professionnel
+                pour accéder aux services internes.
+            </p>
+
+            <form id="loginForm">
+
+                <div class="field">
+                    <label for="email">Adresse e-mail</label>
+                    <input
+                        id="email"
+                        type="email"
+                        autocomplete="off"
+                        placeholder="nom@entreprise.fr"
+                        required
+                    >
+                </div>
+
+                <div class="field">
+                    <label for="password">Mot de passe</label>
+
+                    <div class="password-wrapper">
+                        <input
+                            id="password"
+                            type="password"
+                            autocomplete="off"
+                            placeholder="Votre mot de passe"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="toggle-password"
+                            id="togglePassword"
+                            aria-label="Afficher le mot de passe"
+                        >
+                            Afficher
+                        </button>
+                    </div>
+                </div>
+
+                <div class="options">
+
+                    <label class="remember">
+                        <input type="checkbox">
+                        Se souvenir de moi
+                    </label>
+
+                    <a href="#" class="help" onclick="return false;">
+                        Mot de passe oublié ?
+                    </a>
+
+                </div>
+
+                <button class="login" type="submit">
+                    Se connecter
+                </button>
+
+            </form>
+
+            <div class="notice">
+                Connexion protégée · Accès réservé aux utilisateurs autorisés
+            </div>
+
+        </div>
+
+        <div class="simulation" id="simulation">
+
+            <div class="simulation-icon">✓</div>
+
+            <h2>Simulation terminée</h2>
+
+            <p>
+                Cette page faisait partie d'une démonstration interne
+                de sensibilisation à la sécurité informatique.
+            </p>
+
+            <div class="details">
+                <strong>À retenir</strong><br><br>
+
+                Vérifiez toujours l'adresse du site avant de saisir
+                des informations sensibles.<br><br>
+
+                En cas de doute, contactez le service informatique
+                ou utilisez un moyen de communication officiel.
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+<footer>
+    © 2026 Secure Portal · Démonstration de sensibilisation
+</footer>
 
 <script>
-const output = document.getElementById("output");
-const terminal = document.getElementById("terminalScreen");
-const panic = document.getElementById("panicScreen");
-const reveal = document.getElementById("reveal");
-const panicText = document.getElementById("panicText");
+    const form = document.getElementById("loginForm");
+    const loginInterface = document.getElementById("loginInterface");
+    const simulation = document.getElementById("simulation");
 
-const lines = [
-  "[VANTA] PRIVATE ESPORTS CONSOLE // v7.1",
-  "[BOOT] Initializing VANTA secure channel...",
-  "[OK] Channel encrypted",
-  "[INFO] Verifying target session...",
-  "[OK] Session detected",
-  "",
-  "VANTA@BLACKOUT:~$ ./shadow --connect",
-  "[OK] Connection established",
-  "[INFO] Mapping visible session...",
-  "[SCAN] Browser environment ........ OK",
-  "[SCAN] Local session .............. FOUND",
-  "[SCAN] Security state ............. WARNING",
-  "",
-  "[!] UNUSUAL ACCESS PATTERN DETECTED",
-  "[!] LOCKDOWN PROTOCOL ARMED",
-  "",
-  "VANTA@BLACKOUT:~$ ./override --force",
-  "[OK] Override sequence accepted",
-  "[WARN] Security barrier unstable",
-  "[WARN] FINAL ACCESS SEQUENCE STARTED",
-  "",
-  "[!!!] DO NOT CLOSE THIS WINDOW [!!!]"
-];
+    const password = document.getElementById("password");
+    const togglePassword = document.getElementById("togglePassword");
 
-let i = 0;
+    togglePassword.addEventListener("click", () => {
 
-function typeLine(text, cb) {
-  let j = 0;
-  const line = document.createElement("div");
-  output.appendChild(line);
+        if (password.type === "password") {
+            password.type = "text";
+            togglePassword.textContent = "Masquer";
+        } else {
+            password.type = "password";
+            togglePassword.textContent = "Afficher";
+        }
 
-  function tick() {
-    line.textContent = text.slice(0, j++);
-    output.scrollTop = output.scrollHeight;
-    if (j <= text.length) {
-      setTimeout(tick, text.length ? 7 : 10);
-    } else {
-      cb();
-    }
-  }
-  tick();
-}
-
-function run() {
-  if (i < lines.length) {
-    typeLine(lines[i], () => {
-      i++;
-      setTimeout(run, lines[i-1] === "" ? 80 : 145);
     });
-  } else {
-    setTimeout(showPanic, 450);
-  }
-}
 
-function showPanic() {
-  terminal.style.display = "none";
-  panic.style.display = "flex";
-  let n = 0;
-  const msgs = [
-    "Finalizing security check...",
-    "Finalizing simulated access...",
-    "Preparing security report..."
-  ];
-  const timer = setInterval(() => {
-    panicText.textContent = msgs[n++ % msgs.length];
-  }, 600);
-  setTimeout(() => {
-    clearInterval(timer);
-    panic.style.display = "none";
-    reveal.style.display = "flex";
-  }, 3600);
-}
+    form.addEventListener("submit", (event) => {
 
-run();
+        event.preventDefault();
+
+        /*
+         * IMPORTANT :
+         * Les informations saisies ne sont ni envoyées,
+         * ni enregistrées, ni stockées.
+         */
+
+        loginInterface.style.display = "none";
+        simulation.style.display = "block";
+
+    });
 </script>
+
 </body>
 </html>
