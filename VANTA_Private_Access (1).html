@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VANTA // PRIVATE ACCESS</title>
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin:0; width:100%; height:100%; background:#050505; color:#e8e8e8; font-family:Consolas, "Courier New", monospace; }
+  body { overflow:hidden; }
+  .screen { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; padding:24px; }
+  #terminalScreen { background:radial-gradient(circle at center, #101010 0, #050505 55%, #000 100%); }
+  .terminal {
+    width:min(1050px, 96vw); height:min(680px, 88vh);
+    border:1px solid #263026; background:#020302;
+    box-shadow:0 0 35px rgba(0,255,80,.08), inset 0 0 30px rgba(0,255,80,.025);
+    overflow:hidden; position:relative;
+  }
+  .bar { height:36px; display:flex; align-items:center; gap:7px; padding:0 12px; background:#111; border-bottom:1px solid #222; }
+  .dot { width:11px; height:11px; border-radius:50%; background:#444; }
+  .dot.r{background:#ff5f57}.dot.y{background:#febc2e}.dot.g{background:#28c840}
+  .title { margin-left:8px; color:#777; font:12px Arial,sans-serif; }
+  #output { height:calc(100% - 36px); padding:22px; overflow:hidden; color:#9cff9c; font-size:14px; line-height:1.55; white-space:pre-wrap; }
+  .cursor { display:inline-block; width:8px; height:16px; background:#9cff9c; vertical-align:-3px; animation:blink .8s infinite; }
+  @keyframes blink { 50% {opacity:0} }
+
+  #panicScreen { display:none; background:#120000; text-align:center; animation:flash .25s infinite alternate; }
+  @keyframes flash { from{background:#120000} to{background:#250000} }
+  .panicBox { width:min(850px,94vw); }
+  .warning { color:#ff3030; font-size:clamp(30px,6vw,72px); font-weight:900; letter-spacing:2px; text-shadow:0 0 20px #f00; }
+  .sub { color:#ff9b9b; font-size:clamp(15px,2vw,22px); margin-top:20px; }
+  .progress { margin:35px auto 0; height:18px; max-width:700px; border:1px solid #f33; padding:2px; }
+  .progress i { display:block; width:100%; height:100%; background:#f22; animation:danger 2.5s linear; transform-origin:left; }
+  @keyframes danger { from{transform:scaleX(0)} to{transform:scaleX(1)} }
+
+  #reveal { display:none; background:linear-gradient(135deg,#07140b,#030603); overflow:auto; }
+  .card { width:min(850px,94vw); padding:42px; border:1px solid #2b8; background:rgba(3,15,8,.9); box-shadow:0 0 40px rgba(0,255,120,.08); }
+  .badge { display:inline-block; padding:7px 12px; border:1px solid #35d67b; color:#52f18d; font-size:12px; letter-spacing:2px; }
+  h1 { color:#62ff9b; font-family:Arial,sans-serif; font-size:clamp(34px,6vw,62px); margin:18px 0 8px; }
+  h2 { color:#fff; font-family:Arial,sans-serif; }
+  p, li { font-family:Arial,sans-serif; color:#c8d8ce; line-height:1.6; }
+  ul { padding-left:22px; }
+  .good { margin-top:28px; padding:16px; border-left:4px solid #4dff8b; background:#0b2113; color:#d9ffe6; font-family:Arial,sans-serif; }
+  button { margin-top:24px; padding:12px 18px; background:#102c1a; border:1px solid #45ef89; color:#aaffc7; cursor:pointer; font-weight:bold; }
+  button:hover { background:#174b2a; }
+  .small { opacity:.6; font-size:12px; margin-top:18px; }
+</style>
+</head>
+<body>
+
+<section id="terminalScreen" class="screen">
+  <div class="terminal">
+    <div class="bar">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span class="title">VANTA // PRIVATE ACCESS</span>
+    </div>
+    <div id="output"></div>
+  </div>
+</section>
+
+<section id="panicScreen" class="screen">
+  <div class="panicBox">
+    <div class="warning">⚠ ACCESS BREACH</div>
+    <div class="sub">VANTA SECURITY PROTOCOL — CRITICAL ALERT</div>
+    <div class="sub" id="panicText">Finalizing security check...</div>
+    <div class="progress"><i></i></div>
+  </div>
+</section>
+
+<section id="reveal" class="screen">
+  <div class="card">
+    <span class="badge">SIMULATION TERMINÉE</span>
+    <h1>😅 Tu n'as pas été hacké.</h1>
+    <p>
+      Tout ce qui vient de s'afficher était une <strong>fausse simulation</strong>.
+      Cette page ne récupère aucun mot de passe, fichier, adresse IP ou donnée personnelle.
+    </p>
+    <div class="good">
+      <strong>Pourquoi cette simulation ?</strong><br>
+      Pour montrer à quel point une interface peut donner l'impression qu'un ordinateur
+      est compromis alors qu'il ne se passe absolument rien.
+    </div>
+    <h2>Pour éviter les vraies attaques :</h2>
+    <ul>
+      <li>N'entre jamais ton mot de passe sur un lien douteux.</li>
+      <li>Active la double authentification (2FA) quand c'est possible.</li>
+      <li>Vérifie l'adresse du site avant de te connecter.</li>
+      <li>Évite les fichiers et programmes provenant de sources inconnues.</li>
+      <li>Garde ton navigateur, Windows et ton antivirus à jour.</li>
+    </ul>
+    <button onclick="location.reload()">Rejouer la simulation</button>
+    <div class="small">Fictional security demonstration — no data is collected.</div>
+  </div>
+</section>
+
+<script>
+const output = document.getElementById("output");
+const terminal = document.getElementById("terminalScreen");
+const panic = document.getElementById("panicScreen");
+const reveal = document.getElementById("reveal");
+const panicText = document.getElementById("panicText");
+
+const lines = [
+  "[VANTA] PRIVATE ESPORTS CONSOLE // v7.1",
+  "[BOOT] Initializing VANTA secure channel...",
+  "[OK] Channel encrypted",
+  "[INFO] Verifying target session...",
+  "[OK] Session detected",
+  "",
+  "VANTA@BLACKOUT:~$ ./shadow --connect",
+  "[OK] Connection established",
+  "[INFO] Mapping visible session...",
+  "[SCAN] Browser environment ........ OK",
+  "[SCAN] Local session .............. FOUND",
+  "[SCAN] Security state ............. WARNING",
+  "",
+  "[!] UNUSUAL ACCESS PATTERN DETECTED",
+  "[!] LOCKDOWN PROTOCOL ARMED",
+  "",
+  "VANTA@BLACKOUT:~$ ./override --force",
+  "[OK] Override sequence accepted",
+  "[WARN] Security barrier unstable",
+  "[WARN] FINAL ACCESS SEQUENCE STARTED",
+  "",
+  "[!!!] DO NOT CLOSE THIS WINDOW [!!!]"
+];
+
+let i = 0;
+
+function typeLine(text, cb) {
+  let j = 0;
+  const line = document.createElement("div");
+  output.appendChild(line);
+
+  function tick() {
+    line.textContent = text.slice(0, j++);
+    output.scrollTop = output.scrollHeight;
+    if (j <= text.length) {
+      setTimeout(tick, text.length ? 7 : 10);
+    } else {
+      cb();
+    }
+  }
+  tick();
+}
+
+function run() {
+  if (i < lines.length) {
+    typeLine(lines[i], () => {
+      i++;
+      setTimeout(run, lines[i-1] === "" ? 80 : 145);
+    });
+  } else {
+    setTimeout(showPanic, 450);
+  }
+}
+
+function showPanic() {
+  terminal.style.display = "none";
+  panic.style.display = "flex";
+  let n = 0;
+  const msgs = [
+    "Finalizing security check...",
+    "Finalizing simulated access...",
+    "Preparing security report..."
+  ];
+  const timer = setInterval(() => {
+    panicText.textContent = msgs[n++ % msgs.length];
+  }, 600);
+  setTimeout(() => {
+    clearInterval(timer);
+    panic.style.display = "none";
+    reveal.style.display = "flex";
+  }, 3600);
+}
+
+run();
+</script>
+</body>
+</html>
